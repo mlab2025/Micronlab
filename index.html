@@ -1,58 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Micron Laboratory - Search Test & Rate</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f8f6;color:#263238}.container{max-width:1450px;margin:28px auto;padding:0 14px}
-.header{background:#009b57;color:#fff;padding:18px 24px;border-radius:12px 12px 0 0;display:flex;align-items:center;gap:14px}.header h1{margin:0;font-size:25px}.header p{margin:5px 0 0}.logo{width:62px;height:62px;object-fit:contain;background:#fff;border-radius:8px;padding:3px}
-.search{background:#fff;padding:16px;display:flex;gap:10px;border:1px solid #ddd}.search input{flex:1;padding:13px;border:1px solid #ccc;border-radius:7px;font-size:15px}.search button{background:#009b57;color:#fff;border:0;border-radius:7px;padding:0 25px;font-weight:bold;cursor:pointer}
-.count{background:#fff;padding:9px 14px;border:1px solid #ddd;border-top:0;color:#666;font-size:13px}.table-wrap{overflow:auto;background:#fff}table{width:100%;border-collapse:collapse;min-width:1120px}
-th{background:#009b57;color:#fff;padding:11px 9px;text-align:left;font-size:12px;white-space:nowrap}td{padding:10px 9px;border-bottom:1px solid #e3e9e6;font-size:13px}tr:nth-child(even) td{background:#effaf5}
-.eye{border:0;background:#e2f5ec;color:#008b50;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px}.schedule-eye{background:#e8f4ff;color:#1269a5}.no{text-align:center;padding:28px;color:#777}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;padding:18px;align-items:center;justify-content:center}.modal.show{display:flex}
-.modal-box{background:#fff;width:min(1100px,100%);height:min(90vh,850px);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}.modal-head{background:#009b57;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.modal-head h2{margin:0;font-size:19px}.close{background:none;border:0;color:#fff;font-size:28px;cursor:pointer}
-.detail-layout{display:flex;min-height:0;flex:1}.side{width:235px;background:#f4f7f6;border-right:1px solid #ddd;padding:14px 10px}.tab{display:block;width:100%;border:0;background:transparent;text-align:left;padding:12px 13px;border-radius:6px;margin-bottom:4px;cursor:pointer;color:#263238}.tab.active{background:#164f5d;color:#fff;font-weight:bold}
-.detail-content{flex:1;overflow-y:auto;padding:18px}.section{border:1px solid #d8e3df;border-radius:7px;margin-bottom:16px;overflow:hidden}.section-title{background:#e8f7f1;color:#006d40;font-weight:bold;padding:11px 14px}.grid{display:grid;grid-template-columns:250px 1fr}.grid div{padding:10px 13px;border-top:1px solid #edf1ef;font-size:13px;word-break:break-word}.label{font-weight:bold;background:#fafcfb}.page{display:none}.page.active{display:block}
-@media(max-width:700px){.detail-layout{flex-direction:column}.side{width:100%;border-right:0;border-bottom:1px solid #ddd;display:flex;overflow:auto}.tab{min-width:max-content}.grid{grid-template-columns:1fr}.search{flex-direction:column}.search button{height:44px}.modal{padding:8px}}
-</style></head>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f8f6;color:#263238}
+.container{max-width:1450px;margin:28px auto;padding:0 14px}
+.header{background:#009b57;color:#fff;padding:18px 24px;border-radius:12px 12px 0 0;display:flex;align-items:center;gap:14px}
+.header h1{margin:0;font-size:25px}.header p{margin:5px 0 0}
+.logo{width:62px;height:62px;object-fit:contain;background:#fff;border-radius:8px;padding:3px}
+.search{background:#fff;padding:16px;display:flex;gap:10px;border:1px solid #ddd}
+.search input{flex:1;padding:13px;border:1px solid #ccc;border-radius:7px;font-size:15px}
+.search button{background:#009b57;color:#fff;border:0;border-radius:7px;padding:0 25px;font-weight:bold;cursor:pointer}
+.count{background:#fff;padding:9px 14px;border:1px solid #ddd;border-top:0;color:#666;font-size:13px}
+.table-wrap{overflow:auto;background:#fff}
+table{width:100%;border-collapse:collapse;min-width:1120px}
+th{background:#009b57;color:#fff;padding:11px 9px;text-align:left;font-size:12px;white-space:nowrap}
+td{padding:10px 9px;border-bottom:1px solid #e3e9e6;font-size:13px}
+tr:nth-child(even) td{background:#effaf5}
+.eye{border:0;background:#e2f5ec;color:#008b50;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px}
+.schedule-eye{background:#e8f4ff;color:#1269a5}
+.no{text-align:center;padding:28px;color:#777}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;padding:14px;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-box{background:#fff;width:min(1180px,100%);height:min(94vh,900px);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.modal-head{background:#009b57;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+.modal-head h2{margin:0;font-size:19px}.close{background:none;border:0;color:#fff;font-size:28px;cursor:pointer}
+.detail-layout{display:flex;min-height:0;flex:1}
+.side{width:235px;background:#f4f7f6;border-right:1px solid #ddd;padding:14px 10px;flex-shrink:0}
+.tab{display:block;width:100%;border:0;background:transparent;text-align:left;padding:12px 13px;border-radius:6px;margin-bottom:4px;cursor:pointer;color:#263238}
+.tab:hover,.tab.active{background:#164f5d;color:#fff;font-weight:bold}
+.detail-content{flex:1;overflow-y:auto;padding:18px;scroll-behavior:smooth}
+.section{border:1px solid #d8e3df;border-radius:7px;margin-bottom:18px;overflow:hidden;scroll-margin-top:10px}
+.section-title{background:#e8f7f1;color:#006d40;font-weight:bold;padding:11px 14px;font-size:15px}
+.grid{display:grid;grid-template-columns:250px 1fr}
+.grid div{padding:10px 13px;border-top:1px solid #edf1ef;font-size:13px;word-break:break-word;white-space:pre-wrap}
+.label{font-weight:bold;background:#fafcfb}
+.pending{color:#888;font-style:italic}
+.info-note{padding:10px 14px;background:#fff8df;color:#6c5a00;font-size:12px;border-bottom:1px solid #eee}
+@media(max-width:700px){
+ .detail-layout{flex-direction:column}
+ .side{width:100%;border-right:0;border-bottom:1px solid #ddd;display:flex;overflow:auto}
+ .tab{min-width:max-content}
+ .grid{grid-template-columns:1fr}
+ .search{flex-direction:column}.search button{height:44px}
+ .modal{padding:5px}.modal-box{height:96vh}
+}
+</style>
+</head>
 <body>
 <div class="container">
-<div class="header"><img src="micron-logo.png" class="logo" alt="Micron Laboratory" onerror="this.style.display='none'"><div><h1>Micron Laboratory</h1><p>Search Test & Rate</p></div></div>
-<div class="search"><input id="q" type="search" placeholder="Search Test Code or Test Name..."><button onclick="doSearch()">Search</button></div>
-<div class="count" id="count">Loading tests...</div>
-<div class="table-wrap"><table><thead><tr><th>👁</th><th>Test Code</th><th>Test Name</th><th>Sample Type</th><th>Sample Quantity</th><th>Method</th><th>View Schedule & TAT</th><th>Price</th><th>Category</th><th>Department</th></tr></thead><tbody id="tbody"><tr><td colspan="10" class="no">Loading...</td></tr></tbody></table></div>
+  <div class="header">
+    <img src="micron-logo.png" class="logo" alt="Micron Laboratory" onerror="this.style.display='none'">
+    <div><h1>Micron Laboratory</h1><p>Search Test & Rate</p></div>
+  </div>
+
+  <div class="search">
+    <input id="q" type="search" placeholder="Search Test Code or Test Name...">
+    <button onclick="doSearch()">Search</button>
+  </div>
+
+  <div class="count" id="count">Loading tests...</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>👁</th>
+        <th>Test Code</th>
+        <th>Test Name</th>
+        <th>Sample Type</th>
+        <th>Sample Quantity</th>
+        <th>Method</th>
+        <th>View Schedule & TAT</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Department</th>
+      </tr></thead>
+      <tbody id="tbody"><tr><td colspan="10" class="no">Loading...</td></tr></tbody>
+    </table>
+  </div>
 </div>
-<div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><h2 id="title">Test Details</h2><button class="close" onclick="closeModal()">×</button></div>
-<div class="detail-layout"><nav class="side">
-<button class="tab active" data-page="overview" onclick="showPage('overview',this)">Overview</button>
-<button class="tab" data-page="sample" onclick="showPage('sample',this)">Sample Guidelines</button>
-<button class="tab" data-page="schedule" onclick="showPage('schedule',this)">Test Schedule</button>
-<button class="tab" data-page="fees" onclick="showPage('fees',this)">Test Fees & Category</button>
-<button class="tab" data-page="clinical" onclick="showPage('clinical',this)">Clinical Information & Resources</button>
-<button class="tab" data-page="reports" onclick="showPage('reports',this)">Reports</button>
-</nav>
-<main class="detail-content">
-<div id="overview" class="page active"><div class="section"><div class="section-title">Overview</div><div class="grid" id="overviewGrid"></div></div></div>
-<div id="sample" class="page"><div class="section"><div class="section-title">Sample Information</div><div class="grid" id="sampleGrid"></div></div></div>
-<div id="schedule" class="page"><div class="section"><div class="section-title">Test Schedule</div><div class="grid" id="scheduleGrid"></div></div></div>
-<div id="fees" class="page"><div class="section"><div class="section-title">Test Fees & Category</div><div class="grid" id="feesGrid"></div></div></div>
-<div id="clinical" class="page"><div class="section"><div class="section-title">Clinical Information & Resources</div><div class="grid" id="clinicalGrid"></div></div></div>
-<div id="reports" class="page"><div class="section"><div class="section-title">Reports</div><div class="grid" id="reportsGrid"></div></div></div>
-</main></div></div></div>
+
+<div class="modal" id="modal">
+ <div class="modal-box">
+  <div class="modal-head">
+    <h2 id="title">Test Details</h2>
+    <button class="close" onclick="closeModal()">×</button>
+  </div>
+
+  <div class="detail-layout">
+   <nav class="side">
+    <button class="tab active" data-page="overview" onclick="jumpTo('overview',this)">Overview</button>
+    <button class="tab" data-page="sample" onclick="jumpTo('sample',this)">Sample Guidelines</button>
+    <button class="tab" data-page="schedule" onclick="jumpTo('schedule',this)">Test Schedule</button>
+    <button class="tab" data-page="fees" onclick="jumpTo('fees',this)">Test Fees & Category</button>
+    <button class="tab" data-page="clinical" onclick="jumpTo('clinical',this)">Clinical Information & Resources</button>
+    <button class="tab" data-page="reports" onclick="jumpTo('reports',this)">Reports</button>
+   </nav>
+
+   <main class="detail-content" id="detailContent">
+    <section id="overview" class="section">
+      <div class="section-title">Overview</div>
+      <div class="grid" id="overviewGrid"></div>
+    </section>
+    <section id="sample" class="section">
+      <div class="section-title">Sample Guidelines</div>
+      <div class="grid" id="sampleGrid"></div>
+    </section>
+    <section id="schedule" class="section">
+      <div class="section-title">Test Schedule</div>
+      <div class="grid" id="scheduleGrid"></div>
+    </section>
+    <section id="fees" class="section">
+      <div class="section-title">Test Fees & Category</div>
+      <div class="grid" id="feesGrid"></div>
+    </section>
+    <section id="clinical" class="section">
+      <div class="section-title">Clinical Information & Resources</div>
+      <div class="grid" id="clinicalGrid"></div>
+    </section>
+    <section id="reports" class="section">
+      <div class="section-title">Reports</div>
+      <div class="grid" id="reportsGrid"></div>
+    </section>
+   </main>
+  </div>
+ </div>
+</div>
+
 <script>
 let tests=[],shown=[];
-const V=v=>(v===undefined||v===null||String(v).trim()===''?'Pending':String(v));
-const R=(label,v)=>`<div class="label">${label}</div><div>${V(v)}</div>`;
-function pretty(k){return k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase())}
-function grid(id,obj){document.getElementById(id).innerHTML=Object.entries(obj).map(([k,v])=>R(pretty(k),v)).join('')}
-fetch('tests_final.json').then(r=>{if(!r.ok)throw Error();return r.json()}).then(d=>{tests=Array.isArray(d)?d:[];render(tests)}).catch(()=>{document.getElementById('tbody').innerHTML='<tr><td colspan="10" class="no">tests_final.json load nahi ho rahi. Dono files same folder me rakhein.</td></tr>'});
-function render(list){shown=list;document.getElementById('count').textContent=list.length+' test(s) found';let b=document.getElementById('tbody');b.innerHTML='';if(!list.length){b.innerHTML='<tr><td colspan="10" class="no">No Test Found</td></tr>';return}list.forEach((t,i)=>{let tr=document.createElement('tr');tr.innerHTML=`<td><button class="eye" onclick="openDetails(${i})">👁</button></td><td>${V(t.code)}</td><td>${V(t.name)}</td><td>${V(t.sampleType)}</td><td>${V(t.sampleQuantity)}</td><td>${V(t.method)}</td><td><button class="eye schedule-eye" onclick="openDetails(${i},'schedule')">👁</button></td><td>${V(t.price)}</td><td>${V(t.category)}</td><td>${V(t.department)}</td>`;b.appendChild(tr)})}
-function doSearch(){let q=document.getElementById('q').value.toLowerCase().trim();render(!q?tests:tests.filter(t=>[t.code,t.name,t.sampleType,t.method,t.department,t.category].some(x=>String(x||'').toLowerCase().includes(q))))}
-document.getElementById('q').addEventListener('input',doSearch);
-function openDetails(i,page='overview'){let t=shown[i];if(!t)return;document.getElementById('title').textContent=V(t.name);grid('overviewGrid',t.overview);grid('sampleGrid',t.sampleGuidelines);grid('scheduleGrid',t.testSchedule);grid('feesGrid',t.testFeesCategory);grid('clinicalGrid',t.clinicalInformationResources);grid('reportsGrid',t.reports);document.getElementById('modal').classList.add('show');document.body.style.overflow='hidden';let btn=document.querySelector(`.tab[data-page="${page}"]`);showPage(page,btn)}
-function showPage(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active')}
-function closeModal(){document.getElementById('modal').classList.remove('show');document.body.style.overflow=''}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
-</script></body></html>
 
+const V = v => (v===undefined || v===null || String(v).trim()==='' ? 'Pending' : String(v));
+const esc = s => V(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const R = (label,v) => `<div class="label">${esc(label)}</div><div class="${V(v)==='Pending'?'pending':''}">${esc(v)}</div>`;
+const pretty = k => k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase());
+
+function grid(id,obj){
+  document.getElementById(id).innerHTML = Object.entries(obj||{}).map(([k,v])=>R(pretty(k),v)).join('');
+}
+
+function render(list){
+  shown=list;
+  document.getElementById('count').textContent=list.length+' test(s) found';
+  const b=document.getElementById('tbody'); b.innerHTML='';
+  if(!list.length){b.innerHTML='<tr><td colspan="10" class="no">No Test Found</td></tr>';return;}
+  list.forEach((t,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><button class="eye" onclick="openDetails(${i},'overview')">👁</button></td>
+      <td>${esc(t.code)}</td><td>${esc(t.name)}</td>
+      <td>${esc(t.sampleType)}</td><td>${esc(t.sampleQuantity)}</td>
+      <td>${esc(t.method)}</td>
+      <td><button class="eye schedule-eye" onclick="openSchedule(${i})">👁</button></td>
+      <td>${esc(t.price)}</td><td>${esc(t.category)}</td><td>${esc(t.department)}</td>`;
+    b.appendChild(tr);
+  });
+}
+
+function doSearch(){
+  const q=document.getElementById('q').value.toLowerCase().trim();
+  render(!q ? tests : tests.filter(t=>[
+    t.code,t.name,t.sampleType,t.sampleQuantity,t.method,t.department,t.category
+  ].some(x=>String(x||'').toLowerCase().includes(q))));
+}
+document.getElementById('q').addEventListener('input',doSearch);
+
+function fillDetails(t){
+  document.getElementById('title').textContent=V(t.name);
+  grid('overviewGrid',t.overview);
+  grid('sampleGrid',t.sampleGuidelines);
+  grid('scheduleGrid',t.testSchedule);
+  grid('feesGrid',t.testFeesCategory);
+  grid('clinicalGrid',t.clinicalInformationResources);
+  grid('reportsGrid',t.reports);
+}
+
+function openDetails(i,start='overview'){
+  const t=shown[i]; if(!t)return;
+  fillDetails(t);
+  document.getElementById('modal').classList.add('show');
+  document.body.style.overflow='hidden';
+  const content=document.getElementById('detailContent');
+  content.scrollTop=0;
+  setTimeout(()=>jumpTo(start),50);
+}
+
+/* Schedule/TAT eye = ONLY schedule & TAT, no other tabs/sections. */
+function openSchedule(i){
+  const t=shown[i]; if(!t)return;
+  document.getElementById('title').textContent=V(t.name)+' — Schedule & TAT';
+  grid('scheduleGrid',t.testSchedule);
+  document.getElementById('modal').classList.add('show');
+  document.body.style.overflow='hidden';
+
+  // Hide every section except schedule for this special eye button.
+  ['overview','sample','fees','clinical','reports'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  document.getElementById('schedule').style.display='block';
+  document.querySelectorAll('.tab').forEach(x=>x.style.display='none');
+  document.getElementById('detailContent').scrollTop=0;
+}
+
+/* Restore full-detail view. */
+function restoreFull(){
+  ['overview','sample','schedule','fees','clinical','reports'].forEach(id=>{
+    document.getElementById(id).style.display='block';
+  });
+  document.querySelectorAll('.tab').forEach(x=>x.style.display='block');
+}
+
+function jumpTo(id,btn){
+  restoreFull();
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  const target=btn || document.querySelector(`.tab[data-page="${id}"]`);
+  if(target)target.classList.add('active');
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('show');
+  document.body.style.overflow='';
+  restoreFull();
+}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+
+document.getElementById('detailContent').addEventListener('scroll',()=>{
+  const sections=['overview','sample','schedule','fees','clinical','reports'];
+  let current='overview', best=-1;
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el.style.display==='none')return;
+    const d=Math.abs(el.getBoundingClientRect().top-document.getElementById('detailContent').getBoundingClientRect().top-20);
+    if(best===-1||d<best){best=d;current=id;}
+  });
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.page===current));
+});
+
+fetch('tests_v2.json')
+.then(r=>{if(!r.ok)throw Error('tests_v2.json not found');return r.json()})
+.then(d=>{tests=Array.isArray(d)?d:[];render(tests)})
+.catch(()=>{document.getElementById('tbody').innerHTML='<tr><td colspan="10" class="no">tests_v2.json load nahi ho rahi. index.html aur tests_v2.json same folder me rakhein.</td></tr>';document.getElementById('count').textContent='Data load error';});
+</script>
+</body>
+</html>
