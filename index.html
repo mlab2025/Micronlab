@@ -242,10 +242,10 @@ document.getElementById('detailContent').addEventListener('scroll',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.page===current));
 });
 
-fetch('tests_v2.json')
-.then(r=>{if(!r.ok)throw Error('tests_v2.json not found');return r.json()})
+fetch('tests.json')
+.then(r=>{if(!r.ok)throw Error('tests.json not found');return r.json()})
 .then(d=>{tests=Array.isArray(d)?d:[];render(tests)})
-.catch(()=>{document.getElementById('tbody').innerHTML='<tr><td colspan="10" class="no">tests_v2.json load nahi ho rahi. index.html aur tests_v2.json same folder me rakhein.</td></tr>';document.getElementById('count').textContent='Data load error';});
+.catch(()=>{document.getElementById('tbody').innerHTML='<tr><td colspan="10" class="no">tests.json load nahi ho rahi. index.html aur tests.json same folder me rakhein.</td></tr>';document.getElementById('count').textContent='Data load error';});
 </script>
 </body>
 </html>
