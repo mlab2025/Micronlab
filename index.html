@@ -134,9 +134,9 @@ tr:nth-child(even) td{background:#effaf5}
 <script>
 let tests=[],shown=[];
 
-const V = v => (v===undefined || v===null || String(v).trim()==='' ? 'Pending' : String(v));
+const V = v => (v===undefined || v===null || String(v).trim()==='' ? 'No Record Found' : String(v));
 const esc = s => V(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const R = (label,v) => `<div class="label">${esc(label)}</div><div class="${V(v)==='Pending'?'pending':''}">${esc(v)}</div>`;
+const R = (label,v) => `<div class="label">${esc(label)}</div><div class="${V(v)==='No Record Found'?'pending':''}">${esc(v)}</div>`;
 const pretty = k => k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase());
 
 function grid(id,obj){
