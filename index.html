@@ -244,8 +244,8 @@ document.getElementById('detailContent').addEventListener('scroll',()=>{
 });
 
 const SUPABASE_URL = 'https://xldnayhoquadguepedqm.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzIiwicmVmIjoieGxkbmF5aWhvcXVhZGd1ZXBlZHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MjUxMTIsImV4cCI6MjEwMjAwMTExMn0.JFhbtVanfWqlQ6YcThZ0LLYWdZ9gE9DWgw5Q8i3bLU0';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_EPC6EEnO2EEvcIQFtozteA_XTKMyPx1";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 /* Convert one flat Supabase row into the same shape used by the existing UI. */
 function mapTest(t){
@@ -347,3 +347,7 @@ loadTests().catch(err => {
 </script>
 </body>
 </html>
+
+ 
+ 
+
