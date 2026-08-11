@@ -50,6 +50,7 @@ tr:nth-child(even) td{background:#effaf5}
  .modal{padding:5px}.modal-box{height:96vh}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="container">
@@ -164,7 +165,7 @@ function render(list){
 function doSearch(){
   const q=document.getElementById('q').value.toLowerCase().trim();
   render(!q ? tests : tests.filter(t=>[
-    t.code,t.name,t.sampleType,t.sampleQuantity,t.method,t.department,t.category
+    t.code,t.name,t.sampleType,t.sampleQuantity,t.method,t.department,t.category,t.id
   ].some(x=>String(x||'').toLowerCase().includes(q))));
 }
 document.getElementById('q').addEventListener('input',doSearch);
@@ -242,10 +243,107 @@ document.getElementById('detailContent').addEventListener('scroll',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.page===current));
 });
 
-fetch('tests.json')
-.then(r=>{if(!r.ok)throw Error('tests.json not found');return r.json()})
-.then(d=>{tests=Array.isArray(d)?d:[];render(tests)})
-.catch(()=>{document.getElementById('tbody').innerHTML='<tr><td colspan="10" class="no">tests.json load nahi ho rahi. index.html aur tests.json same folder me rakhein.</td></tr>';document.getElementById('count').textContent='Data load error';});
+const SUPABASE_URL = 'https://xldnayhoquadguepedqm.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzIiwicmVmIjoieGxkbmF5aWhvcXVhZGd1ZXBlZHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MjUxMTIsImV4cCI6MjEwMjAwMTExMn0.JFhbtVanfWqlQ6YcThZ0LLYWdZ9gE9DWgw5Q8i3bLU0';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* Convert one flat Supabase row into the same shape used by the existing UI. */
+function mapTest(t){
+  return {
+    id: t.id,
+    code: t.test_code,
+    name: t.test_name,
+    sampleType: t.sample_type,
+    sampleQuantity: t.sample_quantity,
+    method: t.method,
+    price: t.price,
+    category: t.category,
+    department: t.department,
+
+    overview: {
+      "Test Code": t.test_code,
+      "Test Name": t.test_name,
+      "Test Type": t.test_type,
+      "Department": t.department,
+      "Category": t.category,
+      "Method": t.method,
+      "Gender": t.gender,
+      "Report Display Name": t.report_display_name,
+      "Description": t.description
+    },
+
+    sampleGuidelines: {
+      "Sample Type": t.sample_type,
+      "Sample Quantity": t.sample_quantity,
+      "Sample Container": t.sample_container,
+      "Sample Volume": t.sample_volume,
+      "Collection Instruction": t.collection_instruction,
+      "Fasting Requirement": t.fasting,
+      "Patient Preparation": t.patient_preparation,
+      "Ambient": t.ambient,
+      "Refrigerated": t.refrigerated,
+      "Frozen": t.frozen,
+      "Shipping Temperature Stability": t.shipping_temperature_stability,
+      "Rejected If Any": t.rejected_if_any,
+      "Sample Retention": t.sample_retention
+    },
+
+    testSchedule: {
+      "Test Schedule": t.test_schedule,
+      "TAT": t.tat,
+      "Days Reported On": t.days_reported_on
+    },
+
+    testFeesCategory: {
+      "Price": t.price,
+      "Fee Price": t.fee_price,
+      "Fee Category": t.fee_category,
+      "Category": t.category
+    },
+
+    clinicalInformationResources: {
+      "Clinical Significance": t.clinical_significance,
+      "Patient Preparation": t.patient_preparation,
+      "Interpretation": t.interpretation,
+      "Special Instructions": t.special_instructions,
+      "Referral / Outsource Information": t.referral_outsource_information,
+      "Description": t.description,
+      "Report Information": t.report_information
+    },
+
+    reports: {
+      "Report Display Name": t.report_display_name,
+      "Report Format": t.report_format
+    }
+  };
+}
+
+/* Load all tests in pages so the app remains safe if the catalogue grows. */
+async function loadTests(){
+  const pageSize = 1000;
+  let all = [];
+
+  for(let from = 0; ; from += pageSize){
+    const {data, error} = await sb
+      .from('patient_tests')
+      .select('*')
+      .range(from, from + pageSize - 1);
+
+    if(error) throw error;
+    if(data && data.length) all = all.concat(data);
+    if(!data || data.length < pageSize) break;
+  }
+
+  tests = all.map(mapTest);
+  render(tests);
+}
+
+loadTests().catch(err => {
+  console.error('Supabase load error:', err);
+  document.getElementById('tbody').innerHTML =
+    '<tr><td colspan="10" class="no">Test data load nahi ho rahi. Supabase connection/RLS check karein.</td></tr>';
+  document.getElementById('count').textContent = 'Data load error';
+});
 </script>
 </body>
 </html>
